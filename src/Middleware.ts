@@ -28,15 +28,13 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
   try{
     const token = req.header("x-auth-token");
     
-    if(!token)
-    {
+    if (!token) {
       return res.status(401).json({ Status: "Denied", message: "No authentication token, access denied" });
     }
     
     const verified = jwt.verify(token, config.jwtSecret);
     
-    if(!verified)
-    {
+    if (!verified) {
       return res.status(401).json({ Status: "Denied", message: "Token verification failed, authorization denied" });
     }
     

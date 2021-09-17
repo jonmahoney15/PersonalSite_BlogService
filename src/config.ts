@@ -5,13 +5,9 @@ import { loadConfig } from "./util/load-config";
 export interface Env {
   NODE_ENV: "development" | "test" | "production";
   PORT: number;
-  FROM_EMAIL: string;
-  PASSWORD: string;
-  TO_EMAIL: string;
   MONGO_DB_URI: string;
-  ORIGIN: string;
-  CRYPT_PASSWORD: string;
   JWT_SECRET: string;
+  JWT_EXPIRES_IN: number;
   ADMIN_STATUS: string;
   GUEST_STATUS: string;
 }
@@ -28,6 +24,7 @@ const schema = Joi.object()
     MONGO_DB_URI: Joi.string(),
     ORIGIN: Joi.string(),
     JWT_SECRET: Joi.string(),
+    JWT_EXPIRES_IN: Joi.number().default(0),
     CRYPT_PASSWORD: Joi.string().regex(/^[a-zA-Z0-9_!@./#&+-]{3,30}$/),
     ADMIN_STATUS: Joi.string(),
     GUEST_STATUS: Joi.string(),
@@ -39,13 +36,9 @@ const env = loadConfig(schema);
 export const config = {
   env: env.NODE_ENV,
   port: env.PORT,
-  from_email: env.FROM_EMAIL,
-  to_email: env.TO_EMAIL,
-  password: env.PASSWORD,
   mongoDbUri: env.MONGO_DB_URI,
-  origin: env.ORIGIN,
   jwtSecret: env.JWT_SECRET,
-  cryptPassword: env.CRYPT_PASSWORD,
+  jwtExpiresIn: env.JWT_EXPIRES_IN,
   adminStatus: env.ADMIN_STATUS,
   guestStatus: env.GUEST_STATUS,
 };
