@@ -57,25 +57,27 @@ export const CreatePost = async (req: Request, res: Response) => {
     const post: IPost = JSON.parse(req.body.Post);
     const title: string = post.Title;
     const exists = await Post.findOne({ Title: title });
-
+    
     if (exists) {
       return res.json({ Status: "Failure", message: "Post was not created! \n Title already exists!" });
-    }
-
+    } 
+    
+    const filePath = path.join(__dirname + "/../../uploads/" + req.file.filename);
+    
     const newPost = new Post({
       Title: post.Title,
       Date: post.Date,
       Description: post.Description,
       Image: {
         //@ts-ignore
-        data: fs.readFileSync( path.join(__dirname + "/../../uploads/" + req.file.filename) ),
+        data: fs.readFileSync(filePath),
         contentType: "image/png",
       },
       MarkDown: post.MarkDown,
     });
 
     await newPost.save();
-
+    
     return res
             .status(200)
             .json({ Status: "Success", message: `New Post with Title: ${newPost.Title} added` });
