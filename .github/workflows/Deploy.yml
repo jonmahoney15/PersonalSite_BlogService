@@ -20,6 +20,8 @@ jobs:
       SERVICE: ${{ secrets.SERVICE }}
       PROJECT_ID: ${{ secrets.PROJECT_ID }}
       REGION: ${{ secrets.REGION }}
+      ENV_VAR: ${{ secrets.ENV_VAR }}
+      CONNECTOR: ${{ secrets.CONNECTOR }}
 
     steps:
       - uses: actions/checkout@v2
