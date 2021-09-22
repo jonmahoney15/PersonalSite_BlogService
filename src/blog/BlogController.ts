@@ -61,7 +61,7 @@ export const CreatePost = async (req: Request, res: Response) => {
     if (exists) {
       return res.json({ Status: "Failure", message: "Post was not created! \n Title already exists!" });
     } 
-    
+   //@ts-ignore 
     const filePath = path.join(__dirname + "/../../uploads/" + req.file.filename);
     
     const newPost = new Post({
