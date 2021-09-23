@@ -24,7 +24,7 @@ COPY --from=ts-build /usr/src/app/yarn.lock .
 RUN yarn install --production=true
 
 RUN mkdir uploads 
-RUN chmod 755 uploads
+RUN chmod 766 uploads
 
 EXPOSE 8080
 
