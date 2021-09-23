@@ -61,7 +61,7 @@ export const CreatePost = async (req: Request, res: Response) => {
     } 
     console.log("after exists");
     //@ts-ignore 
-    const filePath = path.join(__dirname + "/../../uploads/" + req.file.filename);
+    const filePath = path.join(__dirname + "/../uploads/" + req.file.filename);
     console.log(filePath); 
     const newPost = new Post({
       Title: post.Title,
