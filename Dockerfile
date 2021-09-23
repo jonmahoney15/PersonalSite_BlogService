@@ -23,8 +23,6 @@ COPY --from=ts-build /usr/src/app/yarn.lock .
 
 RUN yarn install --production=true
 
-USER 1000
-
 EXPOSE 8080
 
 CMD ["index.js"]
