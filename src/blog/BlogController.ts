@@ -21,7 +21,6 @@ export const UpdatePost = async (req: Request, res: Response) => {
 
     if (
       original?.Title === post.Title &&
-      original?.MarkDown === post.MarkDown &&
       original?.Description === post.Description
     ) {
       res
@@ -33,8 +32,7 @@ export const UpdatePost = async (req: Request, res: Response) => {
       Title: post.Title,
       Date: post.Date,
       Description: post.Description,
-      Image: original?.Image,
-      MarkDown: post.MarkDown,
+      Image: original?.Image
     });
 
     res.status(200).json({Status: "Success", message: "Succesfully updated post" });
@@ -61,9 +59,10 @@ export const CreatePost = async (req: Request, res: Response) => {
     if (exists) {
       return res.json({ Status: "Failure", message: "Post was not created! \n Title already exists!" });
     } 
-   //@ts-ignore 
+    console.log("after exists");
+    //@ts-ignore 
     const filePath = path.join(__dirname + "/../../uploads/" + req.file.filename);
-    
+    console.log(filePath); 
     const newPost = new Post({
       Title: post.Title,
       Date: post.Date,
@@ -72,10 +71,9 @@ export const CreatePost = async (req: Request, res: Response) => {
         //@ts-ignore
         data: fs.readFileSync(filePath),
         contentType: "image/png",
-      },
-      MarkDown: post.MarkDown,
+      }
     });
-
+    console.log("read file trying to save")
     await newPost.save();
     
     return res

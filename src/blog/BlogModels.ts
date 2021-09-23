@@ -20,11 +20,7 @@ const PostSchema: Schema = new Schema({
     data: Buffer,
     contentType: String,
     required: false,
-  },
-  MarkDown: {
-    type: String,
-    required: false,
-  },
+  }
 });
 
 export const Post = mongoose.model<IPost>("Post", PostSchema);
