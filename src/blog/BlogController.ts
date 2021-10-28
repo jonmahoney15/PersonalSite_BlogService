@@ -92,8 +92,9 @@ export const CreatePost = async (req: Request, res: Response) => {
       } else {
         mediumResponse = "Successfully added to medium";
       }
+      console.log(response);
     })  
-
+    console.log(mediumResponse);
     console.log("read file trying to save")
     await newPost.save();
     
