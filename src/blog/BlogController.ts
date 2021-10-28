@@ -4,7 +4,7 @@ import path from "path";
 import { IPost } from "./BlogTypes";
 import { Post } from "./BlogModels";
 import axios from "axios";
-import config from '../config';
+import { config } from '../config';
 
 export const GetPosts = (req: Request, res: Response) => {
   Post.find({}, (err, items) => {
