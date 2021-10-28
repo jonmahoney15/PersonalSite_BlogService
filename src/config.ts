@@ -9,6 +9,8 @@ export interface Env {
   JWT_SECRET: string;
   ADMIN_STATUS: string;
   GUEST_STATUS: string;
+  MEDIUM_URI: string;
+  MEDIUM_TOKEN: string;
 }
 
 const schema = Joi.object()
@@ -21,6 +23,8 @@ const schema = Joi.object()
     JWT_SECRET: Joi.string(),
     ADMIN_STATUS: Joi.string(),
     GUEST_STATUS: Joi.string(),
+    MEDIUM_URI: Joi.string(),
+    MEDIUM_TOKEN: Joi.string()
   })
   .unknown();
 
@@ -33,4 +37,6 @@ export const config = {
   jwtSecret: env.JWT_SECRET,
   adminStatus: env.ADMIN_STATUS,
   guestStatus: env.GUEST_STATUS,
+  medium: env.MEDIUM_URI,
+  mediumToken: env.MEDIUM_TOKEN
 };

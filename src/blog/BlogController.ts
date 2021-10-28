@@ -3,6 +3,8 @@ import fs from "fs";
 import path from "path";
 import { IPost } from "./BlogTypes";
 import { Post } from "./BlogModels";
+import axios from "axios";
+import config from '../config';
 
 export const GetPosts = (req: Request, res: Response) => {
   Post.find({}, (err, items) => {
@@ -19,13 +21,8 @@ export const UpdatePost = async (req: Request, res: Response) => {
     const post = req.body.post;
     const original = await Post.findById(req.body.id);
 
-    if (
-      original?.Title === post.Title &&
-      original?.Description === post.Description
-    ) {
-      res
-        .status(300)
-        .json({Status: "Failure", message: "The updated post has no difference from original." });
+    if ( original?.Title === post.Title && original?.Description === post.Description) {
+      res.status(300).json({Status: "Failure", message: "The updated post has no difference from original." });
     }
 
     await Post.findByIdAndUpdate(req.body.id, {
@@ -59,7 +56,7 @@ export const CreatePost = async (req: Request, res: Response) => {
     if (exists) {
       return res.json({ Status: "Failure", message: "Post was not created! \n Title already exists!" });
     } 
-    console.log("after exists");
+    
     //@ts-ignore 
     const filePath = path.join(__dirname + "/../uploads/" + req.file.filename);
     console.log(filePath); 
@@ -73,12 +70,32 @@ export const CreatePost = async (req: Request, res: Response) => {
         contentType: "image/png",
       }
     });
+    
+    const postForMedium = {
+      title: post.Title,
+      contentFormat: "markdown",
+      content: post.Description,
+      publishStatus: "public"
+    }
+
+    let mediumResponse = "";
+    await axios.post(config.medium, postForMedium, {
+      headers: {
+        'Authorization' : config.mediumToken
+      }
+    }).then(response => {
+      if (response.status !== 201) {
+        mediumResponse = `Did not post to medium, ${response.status} issue`; 
+      } else {
+        mediumResponse = "Successfully added to medium";
+      }
+    })  
+
     console.log("read file trying to save")
     await newPost.save();
     
-    return res
-            .status(200)
-            .json({ Status: "Success", message: `New Post with Title: ${newPost.Title} added` });
+    return res.status(200).json({ Status: "Success", message: `New Post with Title: ${newPost.Title} added and ${mediumResponse}` });
+
   } catch (error: Error | any) {
     return res.status(500).json({ Status: "Error", message: error.message, stack: error.stack });
   }
