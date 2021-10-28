@@ -79,11 +79,14 @@ export const CreatePost = async (req: Request, res: Response) => {
     }
 
     let mediumResponse = "";
-    await axios.post(config.medium, postForMedium, {
+    console.log("Post for medium")
+    console.log(postForMedium);
+    axios.post(config.medium, postForMedium, {
       headers: {
         'Authorization' : config.mediumToken
       }
     }).then(response => {
+      console.log(response);
       if (response.status !== 201) {
         mediumResponse = `Did not post to medium, ${response.status} issue`; 
       } else {
