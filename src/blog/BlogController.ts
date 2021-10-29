@@ -56,6 +56,27 @@ export const CreatePost = async (req: Request, res: Response) => {
     if (exists) {
       return res.json({ Status: "Failure", message: "Post was not created! \n Title already exists!" });
     } 
+ 
+    const postForMedium = {
+      'title' : post.Title,
+      'contentFormat' : 'markdown',
+      'content' : post.Description,
+      'publishStatus' : 'public'
+    }
+
+    let mediumResponse = "";
+    
+    axios.post(config.medium, postForMedium, {
+      headers: {
+        'Authorization' : `Bearer ${config.mediumToken}`
+      }
+    }).then(response => {
+      if (response.status !== 201) {
+        mediumResponse = `Did not post to medium, ${response.status} issue`; 
+      } else {
+        mediumResponse = "Successfully added to medium";
+      }
+    })  
     
     //@ts-ignore 
     const filePath = path.join(__dirname + "/../uploads/" + req.file.filename);
@@ -71,31 +92,6 @@ export const CreatePost = async (req: Request, res: Response) => {
       }
     });
     
-    const postForMedium = {
-      title: post.Title,
-      contentFormat: "markdown",
-      content: post.Description,
-      publishStatus: "public"
-    }
-
-    let mediumResponse = "";
-    console.log("Post for medium")
-    console.log(postForMedium);
-    axios.post(config.medium, postForMedium, {
-      headers: {
-        'Authorization' : config.mediumToken
-      }
-    }).then(response => {
-      console.log(response);
-      if (response.status !== 201) {
-        mediumResponse = `Did not post to medium, ${response.status} issue`; 
-      } else {
-        mediumResponse = "Successfully added to medium";
-      }
-      console.log(response);
-    })  
-    console.log(mediumResponse);
-    console.log("read file trying to save")
     await newPost.save();
     
     return res.status(200).json({ Status: "Success", message: `New Post with Title: ${newPost.Title} added and ${mediumResponse}` });
