@@ -1,0 +1,66 @@
+name: IMAGE BUILD
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Image
+    runs-on: ubuntu-latest
+    
+    env:
+      SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
+      PROJECT_ID: ${{ secrets.PROJECT_ID }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Automated Version Bump
+        id: version-bump
+        uses: phips28/gh-action-bump-version@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Setup gcloud cli
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+ 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+            install: true
+
+      - name: Creds for GCP
+        run: |
+            gcloud auth configure-docker -q
+     
+      - name: Build Image Locally
+        uses: docker/build-push-action@v3
+        with:
+            load: true 
+            tags: |
+                gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:local
+
+      - name: Scan Image
+        uses: Azure/container-scan@v0
+        with:
+          image-name: gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:local
+          run-quality-checks: false
+          
+      - name: Build Multi Image and Push
+        uses: docker/build-push-action@v3
+        with:
+            push: true
+            platforms: linux/amd64, linux/arm64
+            tags: |
+                gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ steps.version-bump.outputs.newTag }}
+
