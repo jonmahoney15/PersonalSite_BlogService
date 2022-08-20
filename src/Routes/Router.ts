@@ -3,7 +3,7 @@ import { GetPosts, CreatePost, RemovePost, UpdatePost } from "../blog/BlogContro
 import { getPost, auth, verifyAdmin, largeLimiter, upload } from "../Middleware";
 const router = Router();
 
-router.get("/blog/health", auth, (req: Request, res: Response) =>
+router.get("/health", (req: Request, res: Response) =>
   res.status(200).json({ Status: "Success", message: "Blog service is Healthy" })
 );
 
