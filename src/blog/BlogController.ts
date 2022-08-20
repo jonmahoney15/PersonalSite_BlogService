@@ -7,7 +7,7 @@ import axios from "axios";
 import { config } from '../config';
 
 export const GetPosts = (req: Request, res: Response) => {
-  Post.find({}, (err, items) => {
+  Post.find({}, (err: Error, items: any) => {
     if (err) {
       res.status(500).json({Status: "Error", message: err.message, items: [] });
     } else {
@@ -80,7 +80,7 @@ export const CreatePost = async (req: Request, res: Response) => {
     
     //@ts-ignore 
     const filePath = path.join(__dirname + "/../uploads/" + req.file.filename);
-    console.log(filePath); 
+    
     const newPost = new Post({
       Title: post.Title,
       Date: post.Date,
