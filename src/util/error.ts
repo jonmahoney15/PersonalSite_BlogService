@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from "express";
 import pino from "pino";
 import { logger } from "./logger";
 
-export const handle = (err, finalLogger) => {
+export const handle = (err: Error) => {
   logger.fatal(err);
   process.exitCode = 1;
   process.kill(process.pid, "SIGTERM");
