@@ -11,7 +11,7 @@
 
     devShells."aarch64-darwin".default = pkgs.mkShell {
       buildInputs = with pkgs; [
-        cargo rustc rustfmt clippy rust-analyzer
+        cargo rustc rustfmt clippy rust-analyzer podman git
       ];
       env.RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
     };

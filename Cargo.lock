@@ -3,13 +3,6 @@
 version = 4
 
 [[package]]
-name = "PersonalSite_BlogService"
-version = "0.1.0"
-dependencies = [
- "actix-web",
-]
-
-[[package]]
 name = "actix-codec"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -851,6 +844,13 @@ name = "percent-encoding"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e3148f5046208a5d56bcfc03053e3ca6334e51da8dfb19b6cdc8b306fae3283e"
+
+[[package]]
+name = "personalsite_blog_service"
+version = "0.1.0"
+dependencies = [
+ "actix-web",
+]
 
 [[package]]
 name = "pin-project-lite"
