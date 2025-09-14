@@ -1,0 +1,10 @@
+services:
+  db:
+    image: postgres:16
+    container_name: postgres_mahoney_blog
+    restart: always
+    environment:
+      POSTGRES_DB: blogdb
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
