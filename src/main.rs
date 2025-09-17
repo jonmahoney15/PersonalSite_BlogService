@@ -1,9 +1,9 @@
-mod models;
 mod controller;
 mod database_config;
+mod models;
 mod service;
 
-use actix_web::{web::Data, App, HttpServer};
+use actix_web::{App, HttpServer, web::Data};
 use controller::{create_post, get_posts, health_check};
 use database_config::init_db_pool;
 use sqlx::{Pool, Postgres};
@@ -16,8 +16,9 @@ struct AppState {
 async fn main() -> std::io::Result<()> {
 
     let db_pool = init_db_pool().await;
-
     let app_state = Data::new(AppState { db_pool });
+
+    let _ = sqlx::migrate!().run(&app_state.db_pool).await;
 
     HttpServer::new(move || {
         App::new()
