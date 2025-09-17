@@ -1,5 +1,7 @@
 use crate::{
-    models::post::{CreatePostRequest, PostQueryParams}, service::{create_blog_post, get_blog_posts, get_published_blog_posts}, AppState
+    AppState,
+    models::post::{CreatePostRequest, PostQueryParams},
+    service::{create_blog_post, get_blog_posts, get_published_blog_posts},
 };
 use actix_web::{
     HttpResponse, Responder, get, post,
@@ -12,8 +14,10 @@ pub async fn health_check() -> impl Responder {
 }
 
 #[get("/api/blog/posts")]
-pub async fn get_posts(state: Data<AppState>, params: web::Query<PostQueryParams>) -> impl Responder {
-
+pub async fn get_posts(
+    state: Data<AppState>,
+    params: web::Query<PostQueryParams>,
+) -> impl Responder {
     let result = if params.published == Some(true) {
         get_published_blog_posts(state).await
     } else {
@@ -33,6 +37,9 @@ pub async fn create_post(
 ) -> impl Responder {
     match create_blog_post(state, post.into_inner()).await {
         Ok(post) => HttpResponse::Ok().json(post),
-        Err(e) => HttpResponse::InternalServerError().body(e.to_string()),
+        Err(e) => {
+            eprintln!("Error: {e}");
+            HttpResponse::InternalServerError().body(e.to_string())
+        }
     }
 }
