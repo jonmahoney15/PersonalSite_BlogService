@@ -1,5 +1,5 @@
-pub mod post;
 pub mod image;
+pub mod post;
 
-pub use post::Post;
 pub use image::Image;
+pub use post::Post;
