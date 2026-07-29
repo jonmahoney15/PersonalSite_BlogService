@@ -4,7 +4,7 @@ use crate::{
     service::{create_blog_post, get_blog_posts, get_published_blog_posts},
 };
 use actix_web::{
-    HttpResponse, Responder, get, post,
+    HttpResponse, Responder, get, post, put,
     web::{self, Data},
 };
 
@@ -42,4 +42,13 @@ pub async fn create_post(
             HttpResponse::InternalServerError().body(e.to_string())
         }
     }
+}
+
+#[put("/api/blog/post/{id}")]
+pub async fn update_post(
+    path: web::Path<String>,
+    updated_data: web::Json<CreatePostRequest>,
+) -> impl Responder {
+    println!("path:{path}");
+    HttpResponse::Ok().json(&updated_data.body)
 }
